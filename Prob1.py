@@ -1,28 +1,43 @@
 from pgl import *
+from pgl import GWindow, GRect
 
-#1a
-def create_histogram_array(data:list[int])->list[int]:
-    pass
+# Part 1a: Create the histogram array
+def create_histogram_array(data: list[int]) -> list[int]:
+    histogram = [0] * (max(data) + 1)
+    for number in data:
+        histogram[number] += 1
+    return histogram
 
-#1b
-def print_histogram(hist:list[int]) -> None:
-    pass
+# Part 1b: Print the histogram in text form
+def print_histogram(hist: list[int]) -> None:
+    for index, count in enumerate(hist):
+        print(f"{index}: {'*' * count}")
 
-#1c
-def graph_histogram(hist:list[int], width:int, height:int) -> None:
+# Part 1c: Graph the histogram in a PGL window
+def graph_histogram(hist: list[int], width: int, height: int):
+    gw = GWindow(width, height)
+    bar_width = width / len(hist)
+    max_count = max(hist)
+    height_scale = height / max_count
 
-    def my_rect(x,y,w,h,color):
-        rect = GRect(x,y,w,h)
-        rect.set_filled(True)
-        rect.set_color(color)
+    for i, count in enumerate(hist):
+        bar_height = count * height_scale
+        rect = GRect(i * bar_width, height - bar_height, bar_width, bar_height)
+        rect.setFilled(True)
+        rect.setColor("red")
         gw.add(rect)
 
-    pass
-
-# Some testing printouts for your use!
-PI_DIGITS = [3,1,4,1,5,9,2,6,5,3,5,5,8,9,7,9]
-hist = create_histogram_array(PI_DIGITS)
-print(hist)
-#print_histogram(hist) # uncomment to test
-#graph_histogram(hist, 400, 400) # uncomment to test
-
+# Example usage
+if __name__ == "__main__":
+    PI_DIGITS = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 5, 8, 9, 7, 9]
+    
+    # Generate the histogram array
+    histogram = create_histogram_array(PI_DIGITS)
+    
+    # Print the histogram in text form
+    print("Text-based Histogram:")
+    print_histogram(histogram)
+    
+    # Display the histogram graphically in a PGL window
+    print("Graphical Histogram:")
+    graph_histogram(histogram, 400, 400)
